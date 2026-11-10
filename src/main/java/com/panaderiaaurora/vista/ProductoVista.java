@@ -1,4 +1,3 @@
-
 package com.panaderiaaurora.vista;
 
 import javax.swing.*;
@@ -7,12 +6,12 @@ import java.awt.*;
 
 public class ProductoVista extends JPanel {
 
-    public JTextField txtId = new JTextField(8);
-    public JTextField txtCategoria = new JTextField(8);
-    public JTextField txtNombre = new JTextField(18);
-    public JTextField txtPrecio = new JTextField(10);
-    public JComboBox<String> cmbActivo =
-            new JComboBox<>(new String[]{"Sí", "No"});
+    public JTextField txtId = new JTextField(22);
+    public JTextField txtCategoria = new JTextField(22);
+    public JTextField txtNombre = new JTextField(22);
+    public JTextField txtPrecio = new JTextField(22);
+    public JComboBox<String> cmbActivo
+            = new JComboBox<>(new String[]{"Sí", "No"});
 
     public JButton btnNuevo = new JButton("Nuevo");
     public JButton btnGuardar = new JButton("Guardar");
@@ -68,8 +67,16 @@ public class ProductoVista extends JPanel {
         superior.add(formulario, BorderLayout.CENTER);
         superior.add(botones, BorderLayout.SOUTH);
 
-        add(superior, BorderLayout.CENTER);
-        add(new JScrollPane(tabla), BorderLayout.SOUTH);
+        JPanel contenido = new JPanel(new BorderLayout(10, 15));
+
+        contenido.add(superior, BorderLayout.NORTH);
+
+        JScrollPane scroll = new JScrollPane(tabla);
+        scroll.setPreferredSize(new Dimension(600, 300));
+
+        contenido.add(scroll, BorderLayout.CENTER);
+
+        add(contenido, BorderLayout.CENTER);
 
         tabla.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
     }

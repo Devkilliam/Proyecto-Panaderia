@@ -1,5 +1,11 @@
 package com.panaderiaaurora;
 
+import com.panaderiaaurora.dao.IngredienteDAO;
+import com.panaderiaaurora.controlador.IngredienteControlador;
+import com.panaderiaaurora.vista.IngredienteVista;
+import com.panaderiaaurora.dao.ProductoDAO;
+import com.panaderiaaurora.controlador.ProductoControlador;
+import com.panaderiaaurora.vista.ProductoVista;
 import java.awt.BorderLayout;
 import java.awt.CardLayout;
 import java.awt.Color;
@@ -109,6 +115,8 @@ public class PanaderiaAurora extends JFrame {
 
         contenido.add(construirInicio(), "inicio");
         contenido.add(construirCategorias(), "categorias");
+        contenido.add(construirProductos(), "productos");
+        contenido.add(construirIngredientes(), "ingredientes");
         principal.add(contenido, BorderLayout.CENTER);
         setContentPane(principal);
         tarjetas.show(contenido, "inicio");
@@ -147,10 +155,24 @@ public class PanaderiaAurora extends JFrame {
         g.gridy = 3;
         lateral.add(proximos, g);
         for (String titulo : new String[]{"Productos", "Ingredientes", "Clientes",
-                "Proveedores", "Pedidos", "Ventas", "Producción", "Inventario"}) {
-            JButton pendiente = boton(titulo, true);
-            g.gridy++;
-            lateral.add(pendiente, g);
+            "Proveedores", "Pedidos", "Ventas", "Producción", "Inventario"}) {
+
+            if (titulo.equals("Productos") || titulo.equals("Ingredientes")) {
+                JButton modulo = boton(titulo, false);
+
+                String tarjeta = titulo.equals("Productos")
+                        ? "productos" : "ingredientes";
+
+                modulo.addActionListener(e -> tarjetas.show(contenido, tarjeta));
+
+                g.gridy++;
+                lateral.add(modulo, g);
+
+            } else {
+                JButton pendiente = boton(titulo, true);
+                g.gridy++;
+                lateral.add(pendiente, g);
+            }
         }
         g.gridy++;
         g.weighty = 1;
@@ -250,6 +272,20 @@ public class PanaderiaAurora extends JFrame {
         cuerpo.add(new JScrollPane(tabla), BorderLayout.CENTER);
         pagina.add(cuerpo, BorderLayout.CENTER);
         return pagina;
+    }
+
+    private JPanel construirProductos() {
+        ProductoVista vista = new ProductoVista();
+        ProductoDAO dao = new ProductoDAO(conexion);
+        new ProductoControlador(dao, vista);
+        return vista;
+    }
+
+    private JPanel construirIngredientes() {
+        IngredienteVista vista = new IngredienteVista();
+        IngredienteDAO dao = new IngredienteDAO(conexion);
+        new IngredienteControlador(dao, vista);
+        return vista;
     }
 
     private JPanel paginaBase(String titulo) {
