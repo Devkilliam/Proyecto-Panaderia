@@ -1,5 +1,14 @@
 package com.panaderiaaurora;
 
+import com.panaderiaaurora.dao.PedidoDAO;
+import com.panaderiaaurora.controlador.PedidoControlador;
+import com.panaderiaaurora.vista.PedidoVista;
+import com.panaderiaaurora.dao.ClienteDAO;
+import com.panaderiaaurora.controlador.ClienteControlador;
+import com.panaderiaaurora.vista.ClienteVista;
+import com.panaderiaaurora.dao.ProveedorDAO;
+import com.panaderiaaurora.controlador.ProveedorControlador;
+import com.panaderiaaurora.vista.ProveedorVista;
 import com.panaderiaaurora.dao.IngredienteDAO;
 import com.panaderiaaurora.controlador.IngredienteControlador;
 import com.panaderiaaurora.vista.IngredienteVista;
@@ -117,6 +126,9 @@ public class PanaderiaAurora extends JFrame {
         contenido.add(construirCategorias(), "categorias");
         contenido.add(construirProductos(), "productos");
         contenido.add(construirIngredientes(), "ingredientes");
+        contenido.add(construirProveedores(), "proveedores");
+        contenido.add(construirClientes(), "clientes");
+        contenido.add(construirPedidos(), "pedidos");
         principal.add(contenido, BorderLayout.CENTER);
         setContentPane(principal);
         tarjetas.show(contenido, "inicio");
@@ -157,11 +169,26 @@ public class PanaderiaAurora extends JFrame {
         for (String titulo : new String[]{"Productos", "Ingredientes", "Clientes",
             "Proveedores", "Pedidos", "Ventas", "Producción", "Inventario"}) {
 
-            if (titulo.equals("Productos") || titulo.equals("Ingredientes")) {
+            if (titulo.equals("Productos")
+                    || titulo.equals("Ingredientes")
+                    || titulo.equals("Proveedores")
+                    || titulo.equals("Clientes")
+                    || titulo.equals("Pedidos")) {
                 JButton modulo = boton(titulo, false);
 
-                String tarjeta = titulo.equals("Productos")
-                        ? "productos" : "ingredientes";
+                String tarjeta;
+
+                if (titulo.equals("Productos")) {
+                    tarjeta = "productos";
+                } else if (titulo.equals("Ingredientes")) {
+                    tarjeta = "ingredientes";
+                } else if (titulo.equals("Proveedores")) {
+                    tarjeta = "proveedores";
+                } else if (titulo.equals("Clientes")) {
+                    tarjeta = "clientes";
+                } else {
+                    tarjeta = "pedidos";
+                }
 
                 modulo.addActionListener(e -> tarjetas.show(contenido, tarjeta));
 
@@ -285,6 +312,27 @@ public class PanaderiaAurora extends JFrame {
         IngredienteVista vista = new IngredienteVista();
         IngredienteDAO dao = new IngredienteDAO(conexion);
         new IngredienteControlador(dao, vista);
+        return vista;
+    }
+
+    private JPanel construirProveedores() {
+        ProveedorVista vista = new ProveedorVista();
+        ProveedorDAO dao = new ProveedorDAO(conexion);
+        new ProveedorControlador(dao, vista);
+        return vista;
+    }
+
+    private JPanel construirClientes() {
+        ClienteVista vista = new ClienteVista();
+        ClienteDAO dao = new ClienteDAO(conexion);
+        new ClienteControlador(dao, vista);
+        return vista;
+    }
+
+    private JPanel construirPedidos() {
+        PedidoVista vista = new PedidoVista();
+        PedidoDAO dao = new PedidoDAO(conexion);
+        new PedidoControlador(dao, vista);
         return vista;
     }
 
