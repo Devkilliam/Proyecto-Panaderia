@@ -1,5 +1,17 @@
 package com.panaderiaaurora;
 
+import com.panaderiaaurora.dao.RecetaDAO;
+import com.panaderiaaurora.controlador.RecetaControlador;
+import com.panaderiaaurora.vista.RecetaVista;
+import com.panaderiaaurora.dao.MovimientoInventarioDAO;
+import com.panaderiaaurora.controlador.MovimientoInventarioControlador;
+import com.panaderiaaurora.vista.MovimientoInventarioVista;
+import com.panaderiaaurora.dao.ProduccionDAO;
+import com.panaderiaaurora.controlador.ProduccionControlador;
+import com.panaderiaaurora.vista.ProduccionVista;
+import com.panaderiaaurora.dao.VentaDAO;
+import com.panaderiaaurora.controlador.VentaControlador;
+import com.panaderiaaurora.vista.VentaVista;
 import com.panaderiaaurora.dao.PedidoDAO;
 import com.panaderiaaurora.controlador.PedidoControlador;
 import com.panaderiaaurora.vista.PedidoVista;
@@ -129,9 +141,35 @@ public class PanaderiaAurora extends JFrame {
         contenido.add(construirProveedores(), "proveedores");
         contenido.add(construirClientes(), "clientes");
         contenido.add(construirPedidos(), "pedidos");
+        contenido.add(construirVentas(), "ventas");
+        contenido.add(construirProduccion(), "produccion");
+        contenido.add(construirInventario(), "inventario");
+        contenido.add(construirRecetas(), "recetas");
+
         principal.add(contenido, BorderLayout.CENTER);
         setContentPane(principal);
         tarjetas.show(contenido, "inicio");
+    }
+
+    private JPanel construirVentas() {
+        VentaVista vista = new VentaVista();
+        VentaDAO dao = new VentaDAO(conexion);
+        new VentaControlador(dao, vista);
+        return vista;
+    }
+
+    private JPanel construirRecetas() {
+        RecetaVista vista = new RecetaVista();
+        RecetaDAO dao = new RecetaDAO(conexion);
+        new RecetaControlador(dao, vista);
+        return vista;
+    }
+
+    private JPanel construirProduccion() {
+        ProduccionVista vista = new ProduccionVista();
+        ProduccionDAO dao = new ProduccionDAO(conexion);
+        new ProduccionControlador(dao, vista);
+        return vista;
     }
 
     private JPanel construirMenu() {
@@ -166,14 +204,27 @@ public class PanaderiaAurora extends JFrame {
         proximos.setForeground(new Color(209, 213, 217));
         g.gridy = 3;
         lateral.add(proximos, g);
-        for (String titulo : new String[]{"Productos", "Ingredientes", "Clientes",
-            "Proveedores", "Pedidos", "Ventas", "Producción", "Inventario"}) {
+        for (String titulo : new String[]{
+            "Productos",
+            "Ingredientes",
+            "Clientes",
+            "Proveedores",
+            "Pedidos",
+            "Ventas",
+            "Producción",
+            "Inventario",
+            "Recetas"
+        }) {
 
             if (titulo.equals("Productos")
+                    || titulo.equals("Recetas")
+                    || titulo.equals("Inventario")
+                    || titulo.equals("Producción")
                     || titulo.equals("Ingredientes")
                     || titulo.equals("Proveedores")
                     || titulo.equals("Clientes")
-                    || titulo.equals("Pedidos")) {
+                    || titulo.equals("Pedidos")
+                    || titulo.equals("Ventas")) {
                 JButton modulo = boton(titulo, false);
 
                 String tarjeta;
@@ -186,8 +237,16 @@ public class PanaderiaAurora extends JFrame {
                     tarjeta = "proveedores";
                 } else if (titulo.equals("Clientes")) {
                     tarjeta = "clientes";
-                } else {
+                } else if (titulo.equals("Pedidos")) {
                     tarjeta = "pedidos";
+                } else if (titulo.equals("Producción")) {
+                    tarjeta = "produccion";
+                } else if (titulo.equals("Inventario")) {
+                    tarjeta = "inventario";
+                } else if (titulo.equals("Recetas")) {
+                    tarjeta = "recetas";
+                } else {
+                    tarjeta = "ventas";
                 }
 
                 modulo.addActionListener(e -> tarjetas.show(contenido, tarjeta));
@@ -205,6 +264,13 @@ public class PanaderiaAurora extends JFrame {
         g.weighty = 1;
         lateral.add(new JLabel(""), g);
         return lateral;
+    }
+
+    private JPanel construirInventario() {
+        MovimientoInventarioVista vista = new MovimientoInventarioVista();
+        MovimientoInventarioDAO dao = new MovimientoInventarioDAO(conexion);
+        new MovimientoInventarioControlador(dao, vista);
+        return vista;
     }
 
     private JPanel construirInicio() {
